@@ -48,7 +48,7 @@ public class CommandHandler : ICommandHandler
     //[Summary("Echoes back what was said")]
     //private async Task<string> EchoCommand([Summary("A phrase")] string message)
     //{
-    //    return message;
+    //    return message
     //}
 
     // criar classe de commandos
