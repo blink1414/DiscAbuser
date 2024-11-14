@@ -1,6 +1,7 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
 using DiscordBot.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DiscordBot.Services
 {
@@ -23,10 +24,36 @@ namespace DiscordBot.Services
                 return;
 
             int position = 0;
-            if (message.HasCharPrefix('!', ref position))
+            var context = new SocketCommandContext(_client, message);
+
+            // Verifies if the message starts with "!"
+            if (!message.HasCharPrefix('!', ref position))
             {
-                var context = new SocketCommandContext(_client, message);
-                await _commands.ExecuteAsync(context, position, _serviceProvider);
+                // Verifies if the message has any attatchment
+                if (message.Attachments.Count > 0)
+                {
+                    try
+                    {
+
+                        var fileHandler = _serviceProvider.GetRequiredService<IFileHandler>();
+                        await fileHandler.EncryptAndSendFileAsync(message.Attachments, context);
+                    }
+                    catch (Exception ex) { Console.WriteLine($"\r\n\r\n{ex}"); }
+                    return;
+                }
+                return;
+            }
+
+            var command = message.Content.Substring(1).Trim();
+
+            if (command.StartsWith("echo", StringComparison.OrdinalIgnoreCase))
+            {
+                var echoContent = command.Length > 5 ? command.Substring(5).Trim() : string.Empty;
+                await context.Channel.SendMessageAsync($"Echo: {echoContent}");
+            }
+            else
+            {
+                await context.Channel.SendMessageAsync("Sorry, I do not have any commands, only [!echo <phrase>].");
             }
         }
     }

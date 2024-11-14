@@ -9,13 +9,13 @@ internal class Program
     {
         using var serviceProvider = ServiceConfigurator.ConfigureServices();
         var bot = serviceProvider.GetRequiredService<IBot>();
-        var userInputHandler = serviceProvider.GetRequiredService<IUserInputHandler>();
+        var inputHandler = serviceProvider.GetRequiredService<IUserInputHandler>();
 
         try
         {
             await bot.StartAsync();
 
-            await userInputHandler.WaitForShutdownAsync();
+            await inputHandler.WaitForShutdownAsync();
         }
         catch (Exception ex)
         {

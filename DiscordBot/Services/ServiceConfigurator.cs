@@ -7,32 +7,31 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace DiscordBot.Services
+namespace DiscordBot.Services;
+
+public static class ServiceConfigurator
 {
-    public static class ServiceConfigurator
+    public static ServiceProvider ConfigureServices()
     {
-        public static ServiceProvider ConfigureServices()
+        var configuration = new ConfigurationBuilder()
+            .AddUserSecrets(Assembly.GetExecutingAssembly())
+            .Build();
+
+        var discordConfig = new DiscordSocketConfig
         {
-            var configuration = new ConfigurationBuilder()
-                .AddUserSecrets(Assembly.GetExecutingAssembly())
-                .Build();
+            GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
+        };
 
-            var discordConfig = new DiscordSocketConfig
-            {
-                GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
-            };
-
-            return new ServiceCollection()
-                .AddSingleton<IConfiguration>(configuration)
-                .AddSingleton(discordConfig)
-                .AddSingleton(provider =>
-                    new DiscordSocketClient(provider.GetRequiredService<DiscordSocketConfig>()))
-                .AddSingleton<CommandService>()
-                .AddScoped<CommandHandler>()
-                .AddScoped<IBot, Bot>()
-                .AddScoped<IUserInputHandler, UserInputHandler>()
-                .AddScoped<ICommandHandler, CommandHandler>()
-                .BuildServiceProvider();
-        }
+        return new ServiceCollection()
+            .AddSingleton<IConfiguration>(configuration)
+            .AddSingleton(discordConfig)
+            .AddSingleton(provider =>
+                new DiscordSocketClient(provider.GetRequiredService<DiscordSocketConfig>()))
+            .AddScoped<CommandService>()
+            .AddScoped<ICommandHandler, CommandHandler>()
+            .AddScoped<IBot, Bot>()
+            .AddScoped<IUserInputHandler, UserInputHandler>()
+            .AddScoped<IFileHandler, FileHandler>()
+            .BuildServiceProvider();
     }
 }

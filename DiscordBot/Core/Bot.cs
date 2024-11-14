@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using DiscordBot.Services;
 using DiscordBot.Services.Interfaces;
 using DiscordBot.Core.Interfaces;
+using System.Globalization;
 
 public class Bot : IBot
 {
@@ -13,7 +14,7 @@ public class Bot : IBot
     private readonly CommandService _commands;
     private readonly ICommandHandler _commandHandler;
 
-    public Bot(IConfiguration configuration, DiscordSocketClient client, CommandService commands, CommandHandler commandHandler)
+    public Bot(IConfiguration configuration, DiscordSocketClient client, CommandService commands, ICommandHandler commandHandler)
     {
         _configuration = configuration;
         _client = client;
