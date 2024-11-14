@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/DiscAbuser/FileContentIndex
+/.vs/DiscAbuser/DesignTimeBuild/.dtbcache.v2
+/.vs/DiscAbuser/v17/.suo
+/.vs/DiscAbuser/v17/DocumentLayout.json
+/.vs/slnx.sqlite
+/DiscordBot/obj/Debug/net8.0/ref/DiscordBot.dll
